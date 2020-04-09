@@ -20,8 +20,7 @@ class RecipientController {
       state: Yup.string().required(),
       city: Yup.string().required(),
       cep: Yup.string()
-        .min(8)
-        .max(8)
+        .test('cep', 'Must be exactly 8 characters', cep => cep.length === 8)
         .required()
     });
 
