@@ -1,10 +1,11 @@
 import * as Yup from 'yup';
-import Deliveryman from '../models/Deliveryman';
+import User from '../models/User';
 import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
-    const deliverymans = await Deliveryman.findAll({
+    const deliverymans = await User.findAll({
+      where: { provider: false },
       attributes: ['id', 'name', 'email', 'avatar_id'],
       include: [
         {
@@ -30,7 +31,7 @@ class DeliverymanController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const deliveryman = await Deliveryman.findOne({
+    const deliveryman = await User.findOne({
       where: { email: req.body.email }
     });
 
@@ -38,7 +39,7 @@ class DeliverymanController {
       return res.status(400).json({ error: 'User already exists.' });
     }
 
-    const { id, name, email, avatar_id } = await Deliveryman.create(req.body);
+    const { id, name, email, avatar_id } = await User.create(req.body);
 
     return res.json({
       id,
@@ -60,16 +61,20 @@ class DeliverymanController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const deliveryman = await Deliveryman.findByPk(req.params.id, {
-      attributes: ['id', 'name', 'email']
+    const deliveryman = await User.findByPk(req.params.id, {
+      attributes: ['id', 'name', 'email', 'provider']
     });
+
+    if (deliveryman.provider) {
+      return res.json({ error: 'User is not a deliveryman' });
+    }
 
     if (!deliveryman) {
       return res.json({ error: 'Deliveryman not found' });
     }
 
     if (email && email !== deliveryman.email) {
-      const deliverymanExists = await Deliveryman.findOne({ where: { email } });
+      const deliverymanExists = await User.findOne({ where: { email } });
 
       if (deliverymanExists) {
         return res.status(400).json({ error: 'User already exists.' });
@@ -82,7 +87,7 @@ class DeliverymanController {
   }
 
   async delete(req, res) {
-    const deliveryman = await Deliveryman.findByPk(req.params.id);
+    const deliveryman = await User.findByPk(req.params.id);
 
     if (!deliveryman) {
       return res.json({ error: 'Deliveryman not found' });
