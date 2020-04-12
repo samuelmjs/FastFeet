@@ -7,7 +7,8 @@ import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import RecipientController from './app/controllers/RecipientController';
 import DeliverymanController from './app/controllers/DeliverymanController';
-import OrderController from './app/controllers/OrderController';
+import DeliveryController from './app/controllers/DeliveryController';
+import PendingController from './app/controllers/PendingController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -16,6 +17,8 @@ const upload = multer(multerConfig);
 
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
+
+routes.get('/deliverymans/:id/deliveries', PendingController.index);
 
 routes.use(authMiddleware);
 
@@ -31,10 +34,10 @@ routes.post('/deliverymans', DeliverymanController.store);
 routes.put('/deliverymans/:id', DeliverymanController.update);
 routes.delete('/deliverymans/:id', DeliverymanController.delete);
 
-routes.get('/orders', OrderController.index);
-routes.post('/orders', OrderController.store);
-routes.put('/orders/:id', OrderController.update);
-routes.delete('/orders/:id', OrderController.delete);
+routes.get('/deliveries', DeliveryController.index);
+routes.post('/deliveries', DeliveryController.store);
+routes.put('/deliveries/:id', DeliveryController.update);
+routes.delete('/deliveries/:id', DeliveryController.delete);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
