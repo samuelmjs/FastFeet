@@ -4,6 +4,9 @@ import User from '../models/User';
 import File from '../models/File';
 import Recipient from '../models/Recipient';
 
+import CreationMail from '../jobs/CreationMail';
+import Queue from '../../lib/Queue';
+
 class OrderController {
   async index(req, res) {
     const orders = await Order.findAll({
@@ -54,17 +57,29 @@ class OrderController {
 
     const { recipient_id, deliveryman_id, product } = req.body;
 
-    const isNotProvider = await User.findOne({
+    const isDeliveryman = await User.findOne({
       where: { id: deliveryman_id, provider: false }
     });
 
-    if (!isNotProvider) {
+    if (!isDeliveryman) {
       return res
         .status(401)
         .json({ error: 'You can only create orders to deliverymans' });
     }
 
-    const recipientExists = Recipient.findOne({ where: { id: recipient_id } });
+    const recipientExists = await Recipient.findOne({
+      where: { id: recipient_id },
+      attributes: [
+        'id',
+        'name',
+        'street',
+        'number',
+        'complement',
+        'state',
+        'city',
+        'cep'
+      ]
+    });
 
     if (!recipientExists) {
       return res.status(400).json({ error: 'Recipient not fund' });
@@ -73,6 +88,15 @@ class OrderController {
     const order = await Order.create({
       recipient_id,
       deliveryman_id,
+      product
+    });
+
+    const [firstNameDeliveryman] = isDeliveryman.name.split(' ');
+
+    await Queue.add(CreationMail.key, {
+      firstNameDeliveryman,
+      isDeliveryman,
+      recipientExists,
       product
     });
 
