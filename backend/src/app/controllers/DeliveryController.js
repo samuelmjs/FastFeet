@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import Order from '../models/Order';
+import Delivery from '../models/Delivery';
 import User from '../models/User';
 import File from '../models/File';
 import Recipient from '../models/Recipient';
@@ -7,9 +7,9 @@ import Recipient from '../models/Recipient';
 import CreationMail from '../jobs/CreationMail';
 import Queue from '../../lib/Queue';
 
-class OrderController {
+class DeliveryController {
   async index(req, res) {
-    const orders = await Order.findAll({
+    const deliveries = await Delivery.findAll({
       order: ['id'],
       attributes: [
         'id',
@@ -41,7 +41,7 @@ class OrderController {
       ]
     });
 
-    return res.json(orders);
+    return res.json(deliveries);
   }
 
   async store(req, res) {
@@ -64,7 +64,7 @@ class OrderController {
     if (!isDeliveryman) {
       return res
         .status(401)
-        .json({ error: 'You can only create orders to deliverymans' });
+        .json({ error: 'You can only create delivery to deliverymans' });
     }
 
     const recipientExists = await Recipient.findOne({
@@ -85,7 +85,7 @@ class OrderController {
       return res.status(400).json({ error: 'Recipient not fund' });
     }
 
-    const order = await Order.create({
+    const delivery = await Delivery.create({
       recipient_id,
       deliveryman_id,
       product
@@ -100,7 +100,7 @@ class OrderController {
       product
     });
 
-    return res.json(order);
+    return res.json(delivery);
   }
 
   async update(req, res) {
@@ -123,7 +123,7 @@ class OrderController {
     if (!isNotProvider) {
       return res
         .status(401)
-        .json({ error: 'You can only create orders to deliverymans' });
+        .json({ error: 'You can only create deliveries to deliverymans' });
     }
 
     const recipientExists = await Recipient.findByPk(recipient_id);
@@ -132,30 +132,30 @@ class OrderController {
       return res.status(400).json({ error: 'Recipient not fund' });
     }
 
-    const order = await Order.findOne({ where: { id: req.params.id } });
+    const delivery = await Delivery.findOne({ where: { id: req.params.id } });
 
-    if (!order) {
-      return res.status(400).json({ error: 'Order not exists' });
+    if (!delivery) {
+      return res.status(400).json({ error: 'delivery not exists' });
     }
 
-    await order.update({ recipient_id, deliveryman_id, product });
+    await delivery.update({ recipient_id, deliveryman_id, product });
 
-    return res.json(order);
+    return res.json(delivery);
   }
 
   async delete(req, res) {
-    const order = await Order.findByPk(req.params.id);
+    const delivery = await Delivery.findByPk(req.params.id);
 
-    if (!order) {
-      return res.json({ error: 'Order not exists' });
+    if (!delivery) {
+      return res.json({ error: 'delivery not exists' });
     }
 
-    order.canceled_at = new Date();
+    delivery.canceled_at = new Date();
 
-    await order.save();
+    await delivery.save();
 
     return res.status(204).json();
   }
 }
 
-export default new OrderController();
+export default new DeliveryController();
