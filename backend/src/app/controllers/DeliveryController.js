@@ -18,7 +18,8 @@ class DeliveryController {
         'end_date',
         'recipient_id',
         'deliveryman_id',
-        'canceled_at'
+        'canceled_at',
+        'signature_id'
       ],
       include: [
         {
@@ -37,6 +38,11 @@ class DeliveryController {
               attributes: ['id', 'path', 'url']
             }
           ]
+        },
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['id', 'path', 'url']
         }
       ]
     });
@@ -114,7 +120,7 @@ class DeliveryController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { recipient_id, deliveryman_id, product } = req.body;
+    const { recipient_id, deliveryman_id } = req.body;
 
     const isNotProvider = await User.findOne({
       where: { id: deliveryman_id, provider: false }
@@ -138,7 +144,7 @@ class DeliveryController {
       return res.status(400).json({ error: 'delivery not exists' });
     }
 
-    await delivery.update({ recipient_id, deliveryman_id, product });
+    await delivery.update(req.body);
 
     return res.json(delivery);
   }
@@ -148,6 +154,10 @@ class DeliveryController {
 
     if (!delivery) {
       return res.json({ error: 'delivery not exists' });
+    }
+
+    if (delivery.start_date || delivery.end_date) {
+      return res.json({ error: "delivery can't be canceled" });
     }
 
     delivery.canceled_at = new Date();
