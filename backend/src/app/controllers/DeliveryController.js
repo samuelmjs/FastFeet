@@ -5,6 +5,7 @@ import File from '../models/File';
 import Recipient from '../models/Recipient';
 
 import CreationMail from '../jobs/CreationMail';
+import CancelationMail from '../jobs/CancellationMail';
 import Queue from '../../lib/Queue';
 
 class DeliveryController {
@@ -150,21 +151,54 @@ class DeliveryController {
   }
 
   async delete(req, res) {
-    const delivery = await Delivery.findByPk(req.params.id);
+    const delivery = await Delivery.findByPk(req.params.id, {
+      attributes: [
+        'id',
+        'deliveryman_id',
+        'recipient_id',
+        'canceled_at',
+        'product'
+      ],
+      include: [
+        {
+          model: User,
+          as: 'deliveryman',
+          attributes: ['id', 'name', 'email']
+        },
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: ['id', 'name']
+        }
+      ]
+    });
 
     if (!delivery) {
-      return res.json({ error: 'delivery not exists' });
+      return res.json({ error: 'Delivery not exists' });
+    }
+
+    if (delivery.canceled_at) {
+      return res.json({ error: 'Delivery has already been canceled' });
     }
 
     if (delivery.start_date || delivery.end_date) {
-      return res.json({ error: "delivery can't be canceled" });
+      return res.json({ error: "Delivery can't be canceled" });
     }
 
     delivery.canceled_at = new Date();
 
     await delivery.save();
 
-    return res.status(204).json();
+    await Queue.add(CancelationMail.key, {
+      deliveryman: delivery.deliveryman,
+      product: {
+        id: delivery.id,
+        name: delivery.product
+      },
+      recipient: delivery.recipient.name
+    });
+
+    return res.json(delivery);
   }
 }
 

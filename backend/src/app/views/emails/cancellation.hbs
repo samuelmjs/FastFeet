@@ -1,0 +1,34 @@
+<h1 style="
+  background-color: #7B44F2;
+  padding: 20px;
+  margin: 0;
+  color: #fff;
+  width: 93%;
+  text-align: center;
+  ">
+  Olá, {{deliveryman}}</h1>
+
+<br />
+
+<p style="text-align: center;">Você tem um novo <strong>cancelamento</strong> de entrega</p>
+
+<div style="
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+">
+  <p style="margin: 0 10px;color:#999">ID Produto</p>
+  <strong style="font-size: 18px;">{{product.id}}</strong>
+
+  <br />
+
+  <p style="margin: 0 10px;color:#999">Produto</p>
+  <strong style="font-size: 18px;">{{product.name}}</strong>
+
+  <br />
+
+  <p style="margin: 0 10px;color:#999">Destinatário</p>
+  <strong style="font-size: 18px;">{{recipient}}</strong>
+
+</div>
