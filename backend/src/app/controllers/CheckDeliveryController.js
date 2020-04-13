@@ -7,7 +7,7 @@ import Recipient from '../models/Recipient';
 
 class CheckDeliveryController {
   async index(req, res) {
-    const { delivered } = req.query;
+    const { delivered, page = 1 } = req.query;
 
     const deliverymanExists = await User.findByPk(req.params.id, {
       attributes: ['provider']
@@ -23,6 +23,8 @@ class CheckDeliveryController {
 
     const deliveries = await Delivery.findAll({
       order: ['id'],
+      limit: 5,
+      offset: (page - 1) * 5,
       where: {
         deliveryman_id: req.params.id,
         canceled_at: null,
