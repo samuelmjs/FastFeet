@@ -10,6 +10,8 @@ import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryController from './app/controllers/DeliveryController';
 import CheckDeliveryController from './app/controllers/CheckDeliveryController';
 import EndOfDelivery from './app/controllers/EndOfDelivery';
+import DeliveryProblemController from './app/controllers/DeliveryProblemController';
+import CompanyDeliveryProblemController from './app/controllers/CompanyDeliveryProblemController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -29,6 +31,9 @@ routes.post(
   EndOfDelivery.store
 );
 
+routes.get('/delivery/:id/problems', DeliveryProblemController.index);
+routes.post('/delivery/:id/problems', DeliveryProblemController.store);
+
 routes.use(authMiddleware);
 
 routes.put('/users', UserController.uptade);
@@ -47,6 +52,13 @@ routes.get('/deliveries', DeliveryController.index);
 routes.post('/deliveries', DeliveryController.store);
 routes.put('/deliveries/:id', DeliveryController.update);
 routes.delete('/deliveries/:id', DeliveryController.delete);
+
+routes.get('/deliveries/problems', CompanyDeliveryProblemController.index);
+
+routes.delete(
+  '/problem/:id/cancel-delivery',
+  CompanyDeliveryProblemController.delete
+);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
