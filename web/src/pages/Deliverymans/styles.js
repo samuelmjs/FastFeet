@@ -6,7 +6,7 @@ export const Table = styled.div`
     padding: 0 20px;
     margin-bottom: 15px;
 
-    grid-template-columns: 0.5fr 1.5fr 2fr 1.5fr 1.5fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 
     strong {
       color: #444;
@@ -18,5 +18,3 @@ export const Table = styled.div`
     }
   }
 `;
-
-export const Item = styled.div``;
