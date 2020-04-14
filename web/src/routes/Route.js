@@ -29,6 +29,7 @@ export default function RouteWrapper({
       {...rest}
       render={(props) => (
         <Layout>
+          {console.tron.log}
           <Component {...props} />
         </Layout>
       )}
