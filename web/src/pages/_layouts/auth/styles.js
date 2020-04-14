@@ -51,7 +51,7 @@ export const Content = styled.div`
       span {
         color: #de3b3b;
         align-self: flex-start;
-        margin: 10px 0 10px;
+        margin: 10px 0 0;
       }
     }
     button {
