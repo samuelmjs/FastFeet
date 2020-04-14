@@ -1,14 +1,14 @@
 import React from 'react';
 import { MdAdd, MdSearch } from 'react-icons/md';
 
-import DeliveryItem from './DeliveryItem';
+import ProblemItem from './ProblemItem';
 
 import { Table } from './styles';
 
-export default function Deliveries() {
+export default function Problem() {
   return (
     <>
-      <strong>Gerenciando encomendas</strong>
+      <strong>Gerenciando estinatários</strong>
 
       <aside>
         <div>
@@ -23,19 +23,14 @@ export default function Deliveries() {
 
       <Table>
         <section>
-          <strong>ID</strong>
-          <strong>Destinatátio</strong>
-          <strong>Entregador</strong>
-          <strong>Cidade</strong>
-          <strong>Estado</strong>
-          <strong>Status</strong>
+          <strong>Encomenda</strong>
+          <strong>Problema</strong>
           <strong>Ações</strong>
         </section>
 
-        <DeliveryItem />
-        <DeliveryItem />
-        <DeliveryItem />
-        <DeliveryItem />
+        <ProblemItem />
+        <ProblemItem />
+        <ProblemItem />
       </Table>
     </>
   );

@@ -1,19 +1,19 @@
 import React from 'react';
 import { MdAdd, MdSearch } from 'react-icons/md';
 
-import DeliveryItem from './DeliveryItem';
+import DeliverymanItem from './DeliverymanItem';
 
 import { Table } from './styles';
 
-export default function Deliveries() {
+export default function Deliverymans() {
   return (
     <>
-      <strong>Gerenciando encomendas</strong>
+      <strong>Gerenciando entregadores</strong>
 
       <aside>
         <div>
           <MdSearch size={20} color="#999" />
-          <input placeholder="Busca por encomenda" />
+          <input placeholder="Busca por entregadores" />
         </div>
         <button type="button">
           <MdAdd size={20} color="#fff" />
@@ -24,18 +24,15 @@ export default function Deliveries() {
       <Table>
         <section>
           <strong>ID</strong>
-          <strong>Destinatátio</strong>
-          <strong>Entregador</strong>
-          <strong>Cidade</strong>
-          <strong>Estado</strong>
-          <strong>Status</strong>
+          <strong>Nome</strong>
+          <strong>Foto</strong>
+          <strong>Email</strong>
           <strong>Ações</strong>
         </section>
 
-        <DeliveryItem />
-        <DeliveryItem />
-        <DeliveryItem />
-        <DeliveryItem />
+        <DeliverymanItem />
+        <DeliverymanItem />
+        <DeliverymanItem />
       </Table>
     </>
   );
