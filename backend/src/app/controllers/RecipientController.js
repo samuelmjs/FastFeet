@@ -5,12 +5,15 @@ import User from '../models/User';
 
 class RecipientController {
   async index(req, res) {
-    const { q } = req.query;
+    const { q, page = 1 } = req.query;
 
     const recipients = await Recipient.findAll({
       where: {
         name: q ? { [Op.iLike]: `%${q}%` } : { [Op.ne]: null }
       },
+      order: ['id'],
+      limit: 4,
+      offset: (page - 1) * 4,
       attributes: [
         'id',
         'name',
@@ -24,6 +27,28 @@ class RecipientController {
     });
 
     return res.json(recipients);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+    const recipient = await Recipient.findByPk(id, {
+      attributes: [
+        'id',
+        'name',
+        'street',
+        'number',
+        'complement',
+        'state',
+        'city',
+        'cep'
+      ]
+    });
+
+    if (!recipient) {
+      return res.json({ error: 'Recipient not found' });
+    }
+
+    return res.json(recipient);
   }
 
   async store(req, res) {

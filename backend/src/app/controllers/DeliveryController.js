@@ -10,13 +10,15 @@ import Queue from '../../lib/Queue';
 
 class DeliveryController {
   async index(req, res) {
-    const { q } = req.query;
+    const { q, page = 1 } = req.query;
 
     const deliveries = await Delivery.findAll({
       where: {
         product: q ? { [Op.iLike]: `%${q}%` } : { [Op.ne]: null }
       },
       order: ['id'],
+      limit: 4,
+      offset: (page - 1) * 4,
       attributes: [
         'id',
         'product',
@@ -54,6 +56,55 @@ class DeliveryController {
     });
 
     return res.json(deliveries);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const delivery = await Delivery.findByPk(id, {
+      include: [
+        {
+          model: User,
+          as: 'deliveryman',
+          attributes: ['id', 'name', 'email', 'avatar_id'],
+          include: {
+            model: File,
+            as: 'avatar',
+            attributes: ['name', 'path', 'url']
+          }
+        },
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'id',
+            'name',
+            'street',
+            'number',
+            'state',
+            'city',
+            'complement',
+            'cep'
+          ]
+        },
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['url', 'path', 'name']
+        }
+      ],
+      attributes: [
+        'id',
+        'product',
+        'deliveryman_id',
+        'recipient_id',
+        'canceled_at',
+        'start_date',
+        'end_date'
+      ]
+    });
+
+    return res.json(delivery);
   }
 
   async store(req, res) {
@@ -153,6 +204,20 @@ class DeliveryController {
     await delivery.update(req.body);
 
     return res.json(delivery);
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const deliveryExists = await Delivery.findByPk(id);
+
+    if (!deliveryExists) {
+      return res.status(400).json({ error: 'Delivery not exists' });
+    }
+
+    await deliveryExists.destroy();
+
+    return res.status(200).json();
   }
 }
 
