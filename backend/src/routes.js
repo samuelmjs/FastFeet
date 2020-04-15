@@ -2,33 +2,29 @@ import { Router } from 'express';
 import multer from 'multer';
 import multerConfig from './config/multer';
 
-import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
 import RecipientController from './app/controllers/RecipientController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import DeliveryController from './app/controllers/DeliveryController';
-import CheckDeliveryController from './app/controllers/CheckDeliveryController';
-import EndOfDelivery from './app/controllers/EndOfDelivery';
+import DeliveryStatusController from './app/controllers/DeliveryStatusController';
 import DeliveryProblemController from './app/controllers/DeliveryProblemController';
-import CompanyDeliveryProblemController from './app/controllers/CompanyDeliveryProblemController';
 
 import authMiddleware from './app/middlewares/auth';
 
 const routes = new Router();
 const upload = multer(multerConfig);
 
-routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
 
-routes.get('/deliverymans/:id/deliveries', CheckDeliveryController.index);
-routes.post(
-  '/deliverymans/:id/deliveries/:delivery_id/start',
-  CheckDeliveryController.store
+routes.get('/deliverymen/:id/deliveries', DeliveryStatusController.index);
+routes.put(
+  '/deliverymen/:id/deliveries/:delivery_id/start',
+  DeliveryStatusController.update
 );
 routes.post(
-  '/deliverymans/:id/deliveries/:delivery_id/end',
-  EndOfDelivery.store
+  '/deliverymen/:id/deliveries/:delivery_id/end',
+  DeliveryStatusController.store
 );
 
 routes.get('/delivery/:id/problems', DeliveryProblemController.index);
@@ -36,27 +32,27 @@ routes.post('/delivery/:id/problems', DeliveryProblemController.store);
 
 routes.use(authMiddleware);
 
-routes.put('/users', UserController.uptade);
-
 routes.get('/recipients', RecipientController.index);
+routes.get('/recipients/:id', RecipientController.show);
 routes.post('/recipients', RecipientController.store);
 routes.put('/recipients/:id', RecipientController.update);
 routes.delete('/recipients/:id', RecipientController.delete);
 
-routes.get('/deliverymans', DeliverymanController.index);
-routes.post('/deliverymans', DeliverymanController.store);
-routes.put('/deliverymans/:id', DeliverymanController.update);
-routes.delete('/deliverymans/:id', DeliverymanController.delete);
+routes.get('/deliverymen', DeliverymanController.index);
+routes.get('/deliverymen/:id', DeliverymanController.show);
+routes.post('/deliverymen', DeliverymanController.store);
+routes.put('/deliverymen/:id', DeliverymanController.update);
+routes.delete('/deliverymen/:id', DeliverymanController.delete);
 
 routes.get('/deliveries', DeliveryController.index);
+routes.get('/deliveries/:id', DeliveryController.show);
 routes.post('/deliveries', DeliveryController.store);
 routes.put('/deliveries/:id', DeliveryController.update);
+routes.put('/deliveries/:id', DeliveryController.delete);
 
-routes.get('/deliveries/problems', CompanyDeliveryProblemController.index);
-routes.delete(
-  '/problem/:id/cancel-delivery',
-  CompanyDeliveryProblemController.delete
-);
+routes.get('/deliveries/problems', DeliveryProblemController.index);
+routes.get('/deliveries/:id/problems', DeliveryProblemController.show);
+routes.delete('/problem/:id/cancel-delivery', DeliveryProblemController.delete);
 
 routes.post('/files', upload.single('file'), FileController.store);
 

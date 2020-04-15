@@ -5,13 +5,16 @@ import File from '../models/File';
 
 class DeliverymanController {
   async index(req, res) {
-    const { q } = req.query;
+    const { q, page = 1 } = req.query;
 
     const deliverymans = await User.findAll({
       where: {
         provider: false,
         name: q ? { [Op.iLike]: `%${q}%` } : { [Op.ne]: null }
       },
+      order: ['id'],
+      limit: 4,
+      offset: (page - 1) * 4,
       attributes: ['id', 'name', 'email', 'avatar_id'],
       include: [
         {
@@ -23,6 +26,31 @@ class DeliverymanController {
     });
 
     return res.json(deliverymans);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id, {
+      attributes: ['id', 'name', 'email', 'provider']
+    });
+
+    if (user.provider) {
+      return res.json({ error: 'User is not a deliveryman' });
+    }
+
+    const deliveryman = await User.findByPk(id, {
+      attributes: ['id', 'name', 'email', 'avatar_id'],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['name', 'path', 'url']
+        }
+      ]
+    });
+
+    return res.json(deliveryman);
   }
 
   async store(req, res) {
