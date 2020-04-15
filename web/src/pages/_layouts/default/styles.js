@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { darken } from 'polished';
 
 export const Wrapper = styled.div`
   height: 100%;
@@ -11,8 +10,18 @@ export const Container = styled.div`
   max-width: 1100px;
   padding: 20px;
 
-  strong {
-    font-size: 20px;
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    strong {
+      font-size: 20px;
+    }
+
+    div {
+      display: flex;
+    }
   }
 
   aside {
@@ -40,22 +49,35 @@ export const Container = styled.div`
         }
       }
     }
+  }
 
-    button {
+  form {
+    background: #fff;
+    padding: 30px;
+
+    div {
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 0 0 15px;
 
-      height: 36px;
-      padding: 0 15px;
-      background: #7d40e7;
-      font-weight: 500;
-      color: #fff;
-      border: 0;
-      border-radius: 4px;
-      transition: background 0.2s;
+      p {
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 8px;
+      }
 
-      &:hover {
-        background: ${darken(0.03, '#7d40e7')};
+      input {
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        height: 45px;
+        padding: 0 15px;
+        color: #444;
+
+        &::placeholder {
+          color: #999;
+        }
       }
     }
   }

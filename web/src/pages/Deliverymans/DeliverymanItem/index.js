@@ -1,6 +1,6 @@
 import React from 'react';
-import { MdMoreHoriz } from 'react-icons/md';
 
+import Actions from '~/components/Actions';
 import Item from '~/components/Item';
 
 // import { Container } from './styles';
@@ -17,9 +17,7 @@ export default function DeliveryItem() {
         />
       </div>
       <p>jpereira@fastfeet.com</p>
-      <p>
-        <MdMoreHoriz size={20} color="#444" />
-      </p>
+      <Actions />
     </Item>
   );
 }
