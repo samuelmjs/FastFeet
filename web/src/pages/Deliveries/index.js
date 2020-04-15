@@ -1,24 +1,49 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MdAdd, MdSearch } from 'react-icons/md';
 
+import history from '~/services/history';
+import api from '~/services/api';
+
+import { formatStatus } from '~/utils/format';
+
+import Button from '~/components/Button';
 import DeliveryItem from './DeliveryItem';
 
 import { Table } from './styles';
 
 export default function Deliveries() {
+  const [deliveries, setDeliveries] = useState([]);
+
+  async function getDeliveries() {
+    const response = await api.get('deliveries');
+
+    setDeliveries(
+      response.data.map((delivery) => ({
+        ...delivery,
+        status: formatStatus(delivery),
+      }))
+    );
+  }
+
+  useEffect(() => {
+    getDeliveries();
+  }, []);
+
   return (
     <>
-      <strong>Gerenciando encomendas</strong>
+      <header>
+        <strong>Gerenciando encomendas</strong>
+      </header>
 
       <aside>
         <div>
           <MdSearch size={20} color="#999" />
           <input placeholder="Busca por encomenda" />
         </div>
-        <button type="button">
+        <Button onClick={() => history.push('/deliveries/form')} type="button">
           <MdAdd size={20} color="#fff" />
           CADASTRAR
-        </button>
+        </Button>
       </aside>
 
       <Table>
@@ -32,10 +57,17 @@ export default function Deliveries() {
           <strong>Ações</strong>
         </section>
 
-        <DeliveryItem />
-        <DeliveryItem />
-        <DeliveryItem />
-        <DeliveryItem />
+        {deliveries.map((delivery) => (
+          <DeliveryItem
+            key={delivery.id}
+            id={delivery.id}
+            name={delivery.recipient.name}
+            deliveryman={delivery.deliveryman.name}
+            city={delivery.recipient.city}
+            state={delivery.recipient.state}
+            status={delivery.status}
+          />
+        ))}
       </Table>
     </>
   );

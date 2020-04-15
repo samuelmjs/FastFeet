@@ -1,28 +1,37 @@
 import React from 'react';
-import { MdMoreHoriz } from 'react-icons/md';
 
 import Item from '~/components/Item';
+import Actions from '~/components/Actions';
 
-// import { Container } from './styles';
+import { DeliveryStatus } from './styles';
 
-export default function DeliveryItem() {
+export default function DeliveryItem({
+  id,
+  name,
+  deliveryman,
+  city,
+  state,
+  status,
+}) {
   return (
     <Item>
-      <p>#01</p>
-      <p>Samuel Monteiro</p>
+      <p>#{id}</p>
+      <p>{name}</p>
       <div>
         <img
-          src="https://api.adorable.io/avatars/80/abott@adorable.png"
+          src={`https://api.adorable.io/avatars/80/${deliveryman}.png`}
           alt="avatar"
         />
-        <p>João Pereira</p>
+        <p>{deliveryman}</p>
       </div>
-      <p>Taboão da Serra</p>
-      <p>São Paulo</p>
-      <p>Pendente</p>
-      <p>
-        <MdMoreHoriz size={20} color="#444" />
-      </p>
+      <p>{city}</p>
+      <p>{state}</p>
+      <DeliveryStatus color={status.color}>
+        <div />
+        <p>{status.type}</p>
+      </DeliveryStatus>
+
+      <Actions routeForm="/deliveries/form" />
     </Item>
   );
 }
