@@ -1,14 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Item from '~/components/Item';
+import Actions from '~/components/Actions';
 
-// import { Container } from './styles';
-
-export default function DeliveryItem() {
+export default function ProblemItem({ problem }) {
   return (
     <Item>
-      <p>#01</p>
-      <p>Caminhão bateu com todas as mercadorias dentro</p>
+      <p>#{problem.delivery_id}</p>
+      <p>{problem.description}</p>
+      <Actions />
     </Item>
   );
 }
+
+ProblemItem.propTypes = {
+  problem: PropTypes.shape({
+    delivery_id: PropTypes.number,
+    description: PropTypes.string,
+  }).isRequired,
+};

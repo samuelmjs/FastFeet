@@ -1,3 +1,7 @@
+export function formatAdrress(address) {
+  return `${address.street}, ${address.number}, ${address.city} - ${address.state}`;
+}
+
 export function formatStatus(delivery) {
   if (delivery.end_date) {
     return {

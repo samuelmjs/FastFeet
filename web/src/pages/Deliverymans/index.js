@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MdAdd, MdSearch } from 'react-icons/md';
+
+import api from '~/services/api';
+import history from '~/services/history';
 
 import Button from '~/components/Button';
 import DeliverymanItem from './DeliverymanItem';
@@ -7,6 +10,28 @@ import DeliverymanItem from './DeliverymanItem';
 import { Table } from './styles';
 
 export default function Deliverymans() {
+  const [deliverymen, setDeliverymen] = useState([]);
+
+  async function getDeliverymen() {
+    const response = await api.get('deliverymen');
+
+    setDeliverymen(response.data);
+  }
+
+  async function handleSearchDeliverymen(e) {
+    const response = await api.get('deliverymen', {
+      params: {
+        q: e.target.value,
+      },
+    });
+
+    setDeliverymen(response.data);
+  }
+
+  useEffect(() => {
+    getDeliverymen();
+  }, []);
+
   return (
     <>
       <header>
@@ -16,9 +41,13 @@ export default function Deliverymans() {
       <aside>
         <div>
           <MdSearch size={20} color="#999" />
-          <input placeholder="Busca por entregadores" />
+          <input
+            type="text"
+            onChange={handleSearchDeliverymen}
+            placeholder="Busca por entregadores"
+          />
         </div>
-        <Button type="button">
+        <Button type="button" onClick={() => history.push('/deliverymen/form')}>
           <MdAdd size={20} color="#fff" />
           CADASTRAR
         </Button>
@@ -33,9 +62,9 @@ export default function Deliverymans() {
           <strong>Ações</strong>
         </section>
 
-        <DeliverymanItem />
-        <DeliverymanItem />
-        <DeliverymanItem />
+        {deliverymen.map((deliveryman) => (
+          <DeliverymanItem deliveryman={deliveryman} />
+        ))}
       </Table>
     </>
   );
