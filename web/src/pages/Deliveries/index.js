@@ -25,6 +25,21 @@ export default function Deliveries() {
     );
   }
 
+  async function handleSearchDeliveries(e) {
+    const response = await api.get('deliveries', {
+      params: {
+        q: e.target.value,
+      },
+    });
+
+    setDeliveries(
+      response.data.map((delivery) => ({
+        ...delivery,
+        status: formatStatus(delivery),
+      }))
+    );
+  }
+
   useEffect(() => {
     getDeliveries();
   }, []);
@@ -38,7 +53,11 @@ export default function Deliveries() {
       <aside>
         <div>
           <MdSearch size={20} color="#999" />
-          <input placeholder="Busca por encomenda" />
+          <input
+            type="text"
+            onChange={handleSearchDeliveries}
+            placeholder="Busca por encomenda"
+          />
         </div>
         <Button onClick={() => history.push('/deliveries/form')} type="button">
           <MdAdd size={20} color="#fff" />
@@ -58,15 +77,7 @@ export default function Deliveries() {
         </section>
 
         {deliveries.map((delivery) => (
-          <DeliveryItem
-            key={delivery.id}
-            id={delivery.id}
-            name={delivery.recipient.name}
-            deliveryman={delivery.deliveryman.name}
-            city={delivery.recipient.city}
-            state={delivery.recipient.state}
-            status={delivery.status}
-          />
+          <DeliveryItem key={delivery.id} delivery={delivery} />
         ))}
       </Table>
     </>

@@ -13,7 +13,6 @@ export default function Actions({ routeEdit, routeForm }) {
   const [visible, setVisible] = useState(false);
 
   function handleToggleVisible() {
-    console.tron.log(visible);
     setVisible(!visible);
   }
 

@@ -1,28 +1,29 @@
-import React from 'react';
-import { MdAdd, MdSearch } from 'react-icons/md';
+import React, { useState, useEffect } from 'react';
 
-import Button from '~/components/Button';
+import api from '~/services/api';
+
 import ProblemItem from './ProblemItem';
 
 import { Table } from './styles';
 
 export default function Problem() {
+  const [problems, setProblems] = useState([]);
+
+  async function getProblems() {
+    const response = await api.get('problems');
+
+    setProblems(response.data);
+  }
+
+  useEffect(() => {
+    getProblems();
+  }, []);
+
   return (
     <>
       <header>
         <strong>Gerenciando problemas</strong>
       </header>
-
-      <aside>
-        <div>
-          <MdSearch size={20} color="#999" />
-          <input placeholder="Busca por encomenda" />
-        </div>
-        <Button type="button">
-          <MdAdd size={20} color="#fff" />
-          CADASTRAR
-        </Button>
-      </aside>
 
       <Table>
         <section>
@@ -31,9 +32,9 @@ export default function Problem() {
           <strong>Ações</strong>
         </section>
 
-        <ProblemItem />
-        <ProblemItem />
-        <ProblemItem />
+        {problems.map((problem) => (
+          <ProblemItem key={problem.id} problem={problem} />
+        ))}
       </Table>
     </>
   );

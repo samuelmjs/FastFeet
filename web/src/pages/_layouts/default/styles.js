@@ -14,9 +14,10 @@ export const Container = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 0 0 30px;
 
     strong {
-      font-size: 20px;
+      font-size: 24px;
     }
 
     div {
@@ -28,7 +29,7 @@ export const Container = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 30px 0 20px;
+    margin: 0 0 20px;
 
     div {
       display: flex;
@@ -54,31 +55,22 @@ export const Container = styled.div`
   form {
     background: #fff;
     padding: 30px;
+    border-radius: 4px;
 
-    div {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      margin: 0 0 15px;
+    section {
+      display: grid;
+      margin: 0 0 20px;
 
-      p {
-        font-weight: 500;
-        color: #444;
-        margin-bottom: 8px;
-      }
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-gap: 30px;
+    }
 
-      input {
-        width: 100%;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        height: 45px;
-        padding: 0 15px;
-        color: #444;
+    #firstFocus {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
 
-        &::placeholder {
-          color: #999;
-        }
-      }
+    #twoRows {
+      grid-template-columns: 1fr 1fr;
     }
   }
 `;
