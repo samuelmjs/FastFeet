@@ -26,6 +26,14 @@ class RecipientController {
       ]
     });
 
+    const amount = await User.findAll({
+      where: {
+        name: q ? { [Op.iLike]: `%${q}%` } : { [Op.ne]: null }
+      }
+    });
+
+    res.header('X-Total-Count', amount.length);
+
     return res.json(recipients);
   }
 
