@@ -8,7 +8,7 @@ import { Container, Label, Error } from './styles';
 
 export default function AsyncSelectInput({ name, label, ...rest }) {
   const selectRef = useRef(null);
-  const { fieldName, defaultValue, registerField, error } = useField(name);
+  const { fieldName, defaultValue = '', registerField, error } = useField(name);
 
   useEffect(() => {
     registerField({
@@ -27,12 +27,6 @@ export default function AsyncSelectInput({ name, label, ...rest }) {
         }
         return ref.select.state.value.value;
       },
-      clearValue(ref) {
-        ref.select.select.clearValue();
-      },
-      setValue(ref, value) {
-        ref.select.select.setValue(value);
-      },
     });
   }, [fieldName, registerField, rest.isMulti]);
 
@@ -50,3 +44,8 @@ export default function AsyncSelectInput({ name, label, ...rest }) {
     </Container>
   );
 }
+
+AsyncSelectInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+};

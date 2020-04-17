@@ -27,3 +27,11 @@ export const Label = styled.label`
   display: block;
   margin-bottom: 9px;
 `;
+
+export const Error = styled.span`
+  color: #de3b3b;
+  margin-top: 8px;
+  & + label {
+    margin-top: 8px;
+  }
+`;

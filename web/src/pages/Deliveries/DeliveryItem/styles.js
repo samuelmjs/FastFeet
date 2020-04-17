@@ -25,3 +25,50 @@ export const DeliveryStatus = styled.div`
     color: ${(props) => props.color};
   }
 `;
+
+export const ModalContent = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  > div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    strong {
+      color: #444;
+      margin: 10px 0;
+    }
+
+    small {
+      margin: 3px 0;
+      color: #666;
+      font-size: 16px;
+    }
+
+    > div {
+      display: flex;
+      margin-bottom: 10px;
+
+      p {
+        font-size: 16px;
+        color: #666;
+        margin: 3px 0;
+        font-weight: bold;
+        white-space: normal;
+      }
+    }
+  }
+
+  #signature {
+    padding-top: 15px;
+    align-items: center;
+  }
+
+  > div + div {
+    margin-top: 9px;
+    border-top: 1px solid #eee;
+  }
+`;

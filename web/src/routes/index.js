@@ -22,13 +22,19 @@ export default function Routes() {
 
       <Route path="/deliveries" exact component={Deliveries} isPrivate />
       <Route
+        path="/deliveries/:id/form"
+        exact
+        component={DeliveriesForm}
+        isPrivate
+      />
+      <Route
         path="/deliveries/form"
         exact
         component={DeliveriesForm}
         isPrivate
       />
 
-      <Route path="/deliverymans" exact component={Deliverymen} isPrivate />
+      <Route path="/deliverymen" exact component={Deliverymen} isPrivate />
       <Route
         path="/deliverymen/form"
         exact

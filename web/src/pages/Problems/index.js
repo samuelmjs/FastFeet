@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 
@@ -10,9 +11,20 @@ export default function Problem() {
   const [problems, setProblems] = useState([]);
 
   async function getProblems() {
-    const response = await api.get('problems');
-
+    const response = await api.get(`problems`);
     setProblems(response.data);
+  }
+
+  async function handleCancelProblem(id) {
+    try {
+      await api.delete(`problem/${id}/cancel-delivery`);
+
+      getProblems();
+
+      toast.success('Entrega cancelada com sucesso!');
+    } catch (error) {
+      toast.error('Erro ao cancelar entrega!');
+    }
   }
 
   useEffect(() => {
@@ -33,7 +45,11 @@ export default function Problem() {
         </section>
 
         {problems.map((problem) => (
-          <ProblemItem key={problem.id} problem={problem} />
+          <ProblemItem
+            key={problem.id}
+            problem={problem}
+            onDelete={handleCancelProblem}
+          />
         ))}
       </Table>
     </>

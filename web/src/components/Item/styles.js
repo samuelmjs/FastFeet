@@ -9,8 +9,12 @@ export const Wrapper = styled.section`
   display: grid;
   align-items: center;
 
-  > p:last-child {
-    text-align: right;
+  p {
+    color: #666;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   div {

@@ -15,6 +15,6 @@ export const Container = styled.div`
 `;
 
 export const Error = styled.span`
-  color: #333;
+  color: #de3b3b;
   margin-top: 8px;
 `;
