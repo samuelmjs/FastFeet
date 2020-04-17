@@ -25,6 +25,15 @@ class DeliverymanController {
       ]
     });
 
+    const amount = await User.findAll({
+      where: {
+        provider: false,
+        name: q ? { [Op.iLike]: `%${q}%` } : { [Op.ne]: null }
+      }
+    });
+
+    res.header('X-Total-Count', amount.length);
+
     return res.json(deliverymans);
   }
 
@@ -35,8 +44,12 @@ class DeliverymanController {
       attributes: ['id', 'name', 'email', 'provider']
     });
 
+    if (!user) {
+      return res.status(400).json({ error: 'User is not found' });
+    }
+
     if (user.provider) {
-      return res.json({ error: 'User is not a deliveryman' });
+      return res.status(400).json({ error: 'User is not a deliveryman' });
     }
 
     const deliveryman = await User.findByPk(id, {
@@ -58,7 +71,8 @@ class DeliverymanController {
       name: Yup.string().required(),
       email: Yup.string()
         .email()
-        .required()
+        .required(),
+      avatar_id: Yup.number()
     });
 
     if (!(await schema.isValid(req.body))) {

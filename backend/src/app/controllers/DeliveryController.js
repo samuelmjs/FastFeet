@@ -33,7 +33,7 @@ class DeliveryController {
         {
           model: Recipient,
           as: 'recipient',
-          attributes: ['id', 'name', 'city', 'state']
+          attributes: ['id', 'name', 'street', 'number', 'city', 'state', 'cep']
         },
         {
           model: User,
@@ -54,6 +54,14 @@ class DeliveryController {
         }
       ]
     });
+
+    const amount = await Delivery.findAll({
+      where: {
+        product: q ? { [Op.iLike]: `%${q}%` } : { [Op.ne]: null }
+      }
+    });
+
+    res.header('X-Total-Count', amount.length);
 
     return res.json(deliveries);
   }

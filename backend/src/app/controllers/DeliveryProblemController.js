@@ -11,14 +11,15 @@ class DeliveryProblemController {
   async index(req, res) {
     const { page = 1 } = req.query;
     const deliveryProblems = await DeliveryProblem.findAll({
-      where: {
-        id: req.params.id
-      },
       order: ['id'],
       limit: 4,
       offset: (page - 1) * 4,
       attributes: ['id', 'delivery_id', 'description']
     });
+
+    const amount = await DeliveryProblem.count();
+
+    res.header('X-Total-Count', amount);
 
     return res.json(deliveryProblems);
   }
@@ -32,7 +33,7 @@ class DeliveryProblemController {
       return res.status(400).json({ error: 'Delivery does not exists' });
     }
 
-    const deliveryProblems = await DeliveryProblem.find({ delivery_id: id });
+    const deliveryProblems = await DeliveryProblem.findOne({ delivery_id: id });
 
     return res.json(deliveryProblems);
   }
@@ -52,6 +53,12 @@ class DeliveryProblemController {
       return res.status(400).json({ error: 'Delivery not found' });
     }
 
+    if (delivery.canceled_at) {
+      return res.status(400).json({
+        error: 'Impossible to report a problem. Delivery already canceled'
+      });
+    }
+
     const { id, delivery_id, description } = await DeliveryProblem.create({
       ...req.body,
       delivery_id: req.params.id
@@ -61,7 +68,15 @@ class DeliveryProblemController {
   }
 
   async delete(req, res) {
-    const delivery = await Delivery.findByPk(req.params.id, {
+    const deliveryProblem = await DeliveryProblem.findByPk(req.params.id, {
+      attributes: ['id', 'delivery_id']
+    });
+
+    if (!deliveryProblem) {
+      return res.status(400).json({ error: 'problem not found' });
+    }
+
+    const delivery = await Delivery.findByPk(deliveryProblem.delivery_id, {
       attributes: [
         'id',
         'deliveryman_id',
@@ -83,16 +98,10 @@ class DeliveryProblemController {
       ]
     });
 
-    if (!delivery) {
-      return res.json({ error: 'Delivery not exists' });
-    }
+    await deliveryProblem.destroy();
 
     if (delivery.canceled_at) {
-      return res.json({ error: 'Delivery has already been canceled' });
-    }
-
-    if (delivery.start_date || delivery.end_date) {
-      return res.json({ error: "Delivery can't be canceled" });
+      return res.status(400).json({ error: 'Delivery cannot be canceled' });
     }
 
     delivery.canceled_at = new Date();
@@ -108,7 +117,7 @@ class DeliveryProblemController {
       recipient: delivery.recipient.name
     });
 
-    return res.status(204).json();
+    return res.status(201).json();
   }
 }
 
