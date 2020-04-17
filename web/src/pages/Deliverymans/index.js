@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { MdAdd, MdSearch } from 'react-icons/md';
 
 import api from '~/services/api';
@@ -26,6 +27,20 @@ export default function Deliverymans() {
     });
 
     setDeliverymen(response.data);
+  }
+
+  async function handleDeleteDeliveryman(id) {
+    try {
+      await api.delete(`deliverymen/${id}`);
+
+      const data = deliverymen.filter((deliveryman) => deliveryman.id !== id);
+
+      setDeliverymen(data);
+
+      toast.success('Entregador deletado com sucesso!');
+    } catch (error) {
+      toast.error('Erro ao deletar entregador!');
+    }
   }
 
   useEffect(() => {
@@ -63,7 +78,10 @@ export default function Deliverymans() {
         </section>
 
         {deliverymen.map((deliveryman) => (
-          <DeliverymanItem deliveryman={deliveryman} />
+          <DeliverymanItem
+            deliveryman={deliveryman}
+            onDelete={handleDeleteDeliveryman}
+          />
         ))}
       </Table>
     </>

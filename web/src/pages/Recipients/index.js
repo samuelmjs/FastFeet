@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { MdSearch, MdAdd } from 'react-icons/md';
 
 import api from '~/services/api';
@@ -40,6 +41,20 @@ export default function Repicients() {
     );
   }
 
+  async function handleDeleteRecipient(id) {
+    try {
+      await api.delete(`recipients/${id}`);
+
+      const data = recipients.filter((deliveryman) => deliveryman.id !== id);
+
+      setRecipients(data);
+
+      toast.success('Entregador deletado com sucesso!');
+    } catch (error) {
+      toast.error('Erro ao deletar entregador!');
+    }
+  }
+
   useEffect(() => {
     getRecipients();
   }, []);
@@ -74,7 +89,11 @@ export default function Repicients() {
         </section>
 
         {recipients.map((recipient) => (
-          <RecipientItem key={recipient.id} recipient={recipient} />
+          <RecipientItem
+            key={recipient.id}
+            recipient={recipient}
+            onDelete={handleDeleteRecipient}
+          />
         ))}
       </Table>
     </>

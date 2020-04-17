@@ -1,18 +1,13 @@
 import React from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Link, NavLink } from 'react-router-dom';
 
 import logo from '~/assets/logo.svg';
 
 import { Container, Content, Profile } from './styles';
 
-const currentRouteStyle = {
-  color: '#444',
-};
-
 export default function Header() {
-  const location = useLocation();
-
-  console.tron.log(location.pathname);
+  const profile = useSelector((state) => state.user.profile);
 
   return (
     <Container>
@@ -20,22 +15,14 @@ export default function Header() {
         <nav>
           <img src={logo} alt="fastfeet" />
 
-          <NavLink activeStyle={currentRouteStyle} to="deliveries">
-            ENCOMENDAS
-          </NavLink>
-          <NavLink activeStyle={currentRouteStyle} to="deliverymans">
-            ENTREGADORES
-          </NavLink>
-          <NavLink activeStyle={currentRouteStyle} to="recipients">
-            DESTINATÁRIOS
-          </NavLink>
-          <NavLink activeStyle={currentRouteStyle} to="problems">
-            PROBLEMAS
-          </NavLink>
+          <NavLink to="/deliveries">ENCOMENDAS</NavLink>
+          <NavLink to="/deliverymen">ENTREGADORES</NavLink>
+          <NavLink to="/recipients">DESTINATÁRIOS</NavLink>
+          <NavLink to="/problems">PROBLEMAS</NavLink>
         </nav>
 
         <Profile>
-          <strong>Distribuidora FastFeet</strong>
+          <strong>{profile.name}</strong>
           <Link to="/">sair do sistema</Link>
         </Profile>
       </Content>

@@ -34,6 +34,10 @@ export const Content = styled.div`
       &:hover {
         color: #444;
       }
+
+      &.active {
+        color: #444;
+      }
     }
   }
 `;

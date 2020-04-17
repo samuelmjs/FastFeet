@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { MdAdd, MdSearch } from 'react-icons/md';
 
 import history from '~/services/history';
 import api from '~/services/api';
 
-import { formatStatus } from '~/utils/format';
+import { formatStatus, formatDate } from '~/utils/format';
 
 import Button from '~/components/Button';
 import DeliveryItem from './DeliveryItem';
@@ -21,6 +22,8 @@ export default function Deliveries() {
       response.data.map((delivery) => ({
         ...delivery,
         status: formatStatus(delivery),
+        start_dateFormatted: formatDate(delivery.start_date),
+        end_dateFormatted: formatDate(delivery.end_date),
       }))
     );
   }
@@ -36,8 +39,22 @@ export default function Deliveries() {
       response.data.map((delivery) => ({
         ...delivery,
         status: formatStatus(delivery),
+        start_dateFormatted: formatDate(delivery.start_date),
+        end_dateFormatted: formatDate(delivery.end_date),
       }))
     );
+  }
+
+  async function handleDeleteDelivery(id) {
+    try {
+      await api.delete(`deliveries/${id}`);
+
+      getDeliveries();
+
+      toast.success('Entrega deletada com sucesso!');
+    } catch (error) {
+      toast.error('Erro ao deletar entrega!');
+    }
   }
 
   useEffect(() => {
@@ -77,7 +94,11 @@ export default function Deliveries() {
         </section>
 
         {deliveries.map((delivery) => (
-          <DeliveryItem key={delivery.id} delivery={delivery} />
+          <DeliveryItem
+            key={delivery.id}
+            delivery={delivery}
+            onDelete={handleDeleteDelivery}
+          />
         ))}
       </Table>
     </>
