@@ -10,26 +10,19 @@ import Button from '~/components/Button';
 
 import RecipientItem from './RecipientItem';
 
-import { Table } from './styles';
+import { Table, PageActions } from './styles';
 
 export default function Repicients() {
   const [recipients, setRecipients] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [searchValue, setSearchValue] = useState('');
 
   async function getRecipients() {
-    const response = await api.get('recipients');
-
-    setRecipients(
-      response.data.map((recipient) => ({
-        ...recipient,
-        address: formatAdrress(recipient),
-      }))
-    );
-  }
-
-  async function handleSearchRecipients(e) {
     const response = await api.get('recipients', {
       params: {
-        q: e.target.value,
+        q: searchValue,
+        page,
       },
     });
 
@@ -55,9 +48,32 @@ export default function Repicients() {
     }
   }
 
+  async function handlePage(action) {
+    if (action === 'back') {
+      setPage(page - 1);
+      setTotal(total + 4);
+
+      return;
+    }
+
+    setPage(page + 1);
+    setTotal(total - 4);
+  }
+
   useEffect(() => {
     getRecipients();
-  }, []);
+  }, [page, searchValue]);
+
+  useEffect(() => {
+    async function getTotal() {
+      const response = await api.get('deliverymen', {
+        params: { q: searchValue },
+      });
+      setTotal(response.headers['x-total-count']);
+    }
+
+    getTotal();
+  }, [searchValue]);
 
   return (
     <>
@@ -70,7 +86,7 @@ export default function Repicients() {
           <MdSearch size={20} color="#999" />
           <input
             type="text"
-            onChange={handleSearchRecipients}
+            onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Busca por encomenda"
           />
         </div>
@@ -96,6 +112,26 @@ export default function Repicients() {
           />
         ))}
       </Table>
+
+      <PageActions>
+        <button
+          type="button"
+          disabled={page < 2}
+          onClick={() => handlePage('back')}
+        >
+          Anterior
+        </button>
+
+        <span>{page}</span>
+
+        <button
+          type="button"
+          disabled={total < 4}
+          onClick={() => handlePage('next')}
+        >
+          Próximo
+        </button>
+      </PageActions>
     </>
   );
 }
