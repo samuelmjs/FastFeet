@@ -10,28 +10,19 @@ import { formatStatus, formatDate } from '~/utils/format';
 import Button from '~/components/Button';
 import DeliveryItem from './DeliveryItem';
 
-import { Table } from './styles';
+import { Table, PageActions } from './styles';
 
 export default function Deliveries() {
   const [deliveries, setDeliveries] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [searchValue, setSearchValue] = useState('');
 
   async function getDeliveries() {
-    const response = await api.get('deliveries');
-
-    setDeliveries(
-      response.data.map((delivery) => ({
-        ...delivery,
-        status: formatStatus(delivery),
-        start_dateFormatted: formatDate(delivery.start_date),
-        end_dateFormatted: formatDate(delivery.end_date),
-      }))
-    );
-  }
-
-  async function handleSearchDeliveries(e) {
     const response = await api.get('deliveries', {
       params: {
-        q: e.target.value,
+        q: searchValue,
+        page,
       },
     });
 
@@ -57,9 +48,32 @@ export default function Deliveries() {
     }
   }
 
+  async function handlePage(action) {
+    if (action === 'back') {
+      setPage(page - 1);
+      setTotal(total + 4);
+
+      return;
+    }
+
+    setPage(page + 1);
+    setTotal(total - 4);
+  }
+
   useEffect(() => {
     getDeliveries();
-  }, []);
+  }, [page, searchValue]);
+
+  useEffect(() => {
+    async function getTotal() {
+      const response = await api.get('deliveries', {
+        params: { q: searchValue },
+      });
+      setTotal(response.headers['x-total-count']);
+    }
+
+    getTotal();
+  }, [searchValue]);
 
   return (
     <>
@@ -72,7 +86,7 @@ export default function Deliveries() {
           <MdSearch size={20} color="#999" />
           <input
             type="text"
-            onChange={handleSearchDeliveries}
+            onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Busca por encomenda"
           />
         </div>
@@ -101,6 +115,26 @@ export default function Deliveries() {
           />
         ))}
       </Table>
+
+      <PageActions>
+        <button
+          type="button"
+          disabled={page < 2}
+          onClick={() => handlePage('back')}
+        >
+          Anterior
+        </button>
+
+        <span>{page}</span>
+
+        <button
+          type="button"
+          disabled={total <= 4}
+          onClick={() => handlePage('next')}
+        >
+          Próximo
+        </button>
+      </PageActions>
     </>
   );
 }

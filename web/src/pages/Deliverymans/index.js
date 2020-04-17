@@ -8,21 +8,19 @@ import history from '~/services/history';
 import Button from '~/components/Button';
 import DeliverymanItem from './DeliverymanItem';
 
-import { Table } from './styles';
+import { Table, PageActions } from './styles';
 
 export default function Deliverymans() {
   const [deliverymen, setDeliverymen] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [searchValue, setSearchValue] = useState('');
 
   async function getDeliverymen() {
-    const response = await api.get('deliverymen');
-
-    setDeliverymen(response.data);
-  }
-
-  async function handleSearchDeliverymen(e) {
     const response = await api.get('deliverymen', {
       params: {
-        q: e.target.value,
+        q: searchValue,
+        page,
       },
     });
 
@@ -43,9 +41,32 @@ export default function Deliverymans() {
     }
   }
 
+  async function handlePage(action) {
+    if (action === 'back') {
+      setPage(page - 1);
+      setTotal(total + 4);
+
+      return;
+    }
+
+    setPage(page + 1);
+    setTotal(total - 4);
+  }
+
   useEffect(() => {
     getDeliverymen();
-  }, []);
+  }, [page, searchValue]);
+
+  useEffect(() => {
+    async function getTotal() {
+      const response = await api.get('deliverymen', {
+        params: { q: searchValue },
+      });
+      setTotal(response.headers['x-total-count']);
+    }
+
+    getTotal();
+  }, [searchValue]);
 
   return (
     <>
@@ -58,7 +79,7 @@ export default function Deliverymans() {
           <MdSearch size={20} color="#999" />
           <input
             type="text"
-            onChange={handleSearchDeliverymen}
+            onChange={(e) => setSearchValue(e.target.value)}
             placeholder="Busca por entregadores"
           />
         </div>
@@ -84,6 +105,26 @@ export default function Deliverymans() {
           />
         ))}
       </Table>
+
+      <PageActions>
+        <button
+          type="button"
+          disabled={page < 2}
+          onClick={() => handlePage('back')}
+        >
+          Anterior
+        </button>
+
+        <span>{page}</span>
+
+        <button
+          type="button"
+          disabled={total <= 4}
+          onClick={() => handlePage('next')}
+        >
+          Próximo
+        </button>
+      </PageActions>
     </>
   );
 }
