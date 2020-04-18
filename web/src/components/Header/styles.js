@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   background: #fff;
   padding: 0 30px;
+  border-bottom: 1px solid #ddd;
 `;
 
 export const Content = styled.div`
@@ -50,7 +51,9 @@ export const Profile = styled.aside`
     margin-bottom: 5px;
   }
 
-  a {
+  button {
+    border: none;
+    background: transparent;
     color: #de3b3b;
   }
 `;

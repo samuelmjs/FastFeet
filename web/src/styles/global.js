@@ -5,6 +5,13 @@ import 'react-toastify/dist/ReactToastify.css';
 export default createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
 
+  .Toastify__toast--success {
+    background: #2CA42B;
+  }
+  .Toastify__toast--error {
+    background: #DE3B3B;
+  }
+
   * {
     margin: 0;
     padding: 0;
@@ -39,4 +46,6 @@ export default createGlobalStyle`
   button{
     cursor: pointer;
   }
+
+
 `;
