@@ -38,6 +38,12 @@ export default function Deliveries() {
 
   async function handleDeleteDelivery(id) {
     try {
+      const confirm = window.confirm(
+        'Você tem certeza que deseja deletar isso?'
+      );
+
+      if (!confirm) return;
+
       await api.delete(`deliveries/${id}`);
 
       getDeliveries();

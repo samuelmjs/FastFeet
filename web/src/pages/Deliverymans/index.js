@@ -29,6 +29,12 @@ export default function Deliverymans() {
 
   async function handleDeleteDeliveryman(id) {
     try {
+      const confirm = window.confirm(
+        'Você tem certeza que deseja deletar isso?'
+      );
+
+      if (!confirm) return;
+
       await api.delete(`deliverymen/${id}`);
 
       const data = deliverymen.filter((deliveryman) => deliveryman.id !== id);

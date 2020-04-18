@@ -47,9 +47,7 @@ export default function Form({ match }) {
         complement: Yup.string(),
         city: Yup.string().required('A cidade é obrigatória'),
         state: Yup.string().required('O estado é obrigatório'),
-        cep: Yup.string()
-          .test('cep', 'Deve conter 8 números', (cep) => cep.length === 8)
-          .required('O cep é obrigatório'),
+        cep: Yup.string().required('O cep é obrigatório'),
       });
 
       await schema.validate(data, {
@@ -125,7 +123,13 @@ export default function Form({ match }) {
         <section>
           <Input label="Cidade" name="city" placeholder="Taboão da Serra" />
           <Input label="Estado" name="state" placeholder="São Paulo" />
-          <Input label="CEP" name="cep" placeholder="06764-040" type="number" />
+          <Input
+            label="CEP"
+            name="cep"
+            placeholder="00000-000"
+            maskPlaceholder={null}
+            mask="99999-999"
+          />
         </section>
       </TFrom>
     </>

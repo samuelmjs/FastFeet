@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 import { useField } from '@unform/core';
+import InputMask from 'react-input-mask';
 import PropTypes from 'prop-types';
 
 import { Container, Label, Error } from './styles';
@@ -20,7 +21,7 @@ export default function Input({ name, label, ...rest }) {
   return (
     <Container>
       {label && <Label htmlFor={fieldName}>{label}</Label>}
-      <input ref={inputRef} defaultValue={defaultValue} {...rest} />
+      <InputMask ref={inputRef} defaultValue={defaultValue} {...rest} />
       {error && <Error>{error}</Error>}
     </Container>
   );
