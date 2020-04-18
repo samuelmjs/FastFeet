@@ -23,6 +23,12 @@ export default function Problem() {
 
   async function handleCancelProblem(id) {
     try {
+      const confirm = window.confirm(
+        'Você tem certeza que deseja cancelar isso?'
+      );
+
+      if (!confirm) return;
+
       await api.delete(`problem/${id}/cancel-delivery`);
 
       getProblems();

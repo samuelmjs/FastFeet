@@ -36,6 +36,12 @@ export default function Repicients() {
 
   async function handleDeleteRecipient(id) {
     try {
+      const confirm = window.confirm(
+        'Você tem certeza que deseja deletar isso?'
+      );
+
+      if (!confirm) return;
+
       await api.delete(`recipients/${id}`);
 
       const data = recipients.filter((deliveryman) => deliveryman.id !== id);
@@ -66,7 +72,7 @@ export default function Repicients() {
 
   useEffect(() => {
     async function getTotal() {
-      const response = await api.get('deliverymen', {
+      const response = await api.get('recipients', {
         params: { q: searchValue },
       });
       setTotal(response.headers['x-total-count']);

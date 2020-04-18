@@ -36,8 +36,7 @@ module.exports = {
     'no-console': 'off',
     'no-param-reassign':'off',
     'no-underscore-dangle':'off',
-    // 'react-hooks/rules-of-hooks': 'error',
-    // 'react-hooks/exhaustive-deps': 'warn'
+    'no-alert': 'off'
   },
   settings:{
     'import/resolver':{

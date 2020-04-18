@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { MdModeEdit, MdDeleteForever } from 'react-icons/md';
 
@@ -12,32 +12,33 @@ import { Action } from '~/components/Actions/styles';
 import { DeliveryStatus, ModalContent } from './styles';
 
 export default function DeliveryItem({ delivery, onDelete }) {
-  const deliverymanFormattedName = delivery.deliveryman.name.split(' ');
+  const name = useMemo(() => {
+    const text = delivery.deliveryman.name.split(' ');
+
+    return {
+      fisrt: text[0],
+      second: text.length > 1 ? text[1] : '',
+    };
+  }, [delivery.deliveryman]);
 
   return (
     <>
       <Item>
         <p>#{delivery.id}</p>
-        <p>{delivery.recipient.name}</p>
+        <p>{delivery.recipient?.name || 'USUÁRIO DELETADO'}</p>
         <div>
           <img
             src={
               delivery.deliveryman.avatar
                 ? delivery.deliveryman.avatar.url
-                : `https://ui-avatars.com/api/?name=${
-                    deliverymanFormattedName[0][0]
-                  }+${
-                    deliverymanFormattedName.length > 1
-                      ? deliverymanFormattedName[1][0]
-                      : ''
-                  }&bold=true`
+                : `https://ui-avatars.com/api/?name=${name.fisrt}+${name.second}&bold=true`
             }
             alt="avatar"
           />
-          <p>{delivery.deliveryman.name}</p>
+          <p>{delivery.deliveryman?.name || 'USUÁRIO DELETADO'}</p>
         </div>
-        <p>{delivery.recipient.city}</p>
-        <p>{delivery.recipient.state}</p>
+        <p>{delivery.recipient?.city}</p>
+        <p>{delivery.recipient?.state}</p>
         <DeliveryStatus color={delivery.status.color}>
           <div />
           <p>{delivery.status.type}</p>
@@ -51,12 +52,12 @@ export default function DeliveryItem({ delivery, onDelete }) {
                   <strong>Informações da encomenda</strong>
 
                   <small>
-                    {delivery.recipient.street}, {delivery.recipient.number}
+                    {delivery.recipient?.street}, {delivery.recipient?.number}
                   </small>
                   <small>
-                    {delivery.recipient.city} - {delivery.recipient.state}
+                    {delivery.recipient?.city} - {delivery.recipient?.state}
                   </small>
-                  <small>{delivery.recipient.cep}</small>
+                  <small>{delivery.recipient?.cep}</small>
                 </div>
 
                 <div>

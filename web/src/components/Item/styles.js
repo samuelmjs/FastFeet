@@ -26,6 +26,7 @@ export const Wrapper = styled.section`
       width: 35px;
       border-radius: 50%;
       margin-right: 10px;
+      object-fit: cover;
     }
   }
 `;

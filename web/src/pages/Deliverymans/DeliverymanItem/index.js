@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { MdModeEdit, MdDeleteForever } from 'react-icons/md';
 
@@ -8,10 +8,15 @@ import Item from '~/components/Item';
 import Actions from '~/components/Actions';
 import { Action } from '~/components/Actions/styles';
 
-// import { Container } from './styles';
-
 export default function DeliveryItem({ deliveryman, onDelete }) {
-  const deliverymanFormattedName = deliveryman.name.split(' ');
+  const name = useMemo(() => {
+    const text = deliveryman.name.split(' ');
+
+    return {
+      fisrt: text[0],
+      second: text.length > 1 ? text[1] : '',
+    };
+  }, [deliveryman]);
 
   return (
     <Item>
@@ -22,13 +27,7 @@ export default function DeliveryItem({ deliveryman, onDelete }) {
           src={
             deliveryman.avatar
               ? deliveryman.avatar.url
-              : `https://ui-avatars.com/api/?name=${
-                  deliverymanFormattedName[0][0]
-                }+${
-                  deliverymanFormattedName.length > 1
-                    ? deliverymanFormattedName[1][0]
-                    : ' '
-                }&bold=true`
+              : `https://ui-avatars.com/api/?name=${name.fisrt}+${name.second}&bold=true`
           }
           alt="avatar"
         />
