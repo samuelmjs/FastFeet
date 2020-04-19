@@ -53,7 +53,7 @@ class DeliverymanController {
     }
 
     const deliveryman = await User.findByPk(id, {
-      attributes: ['id', 'name', 'email', 'avatar_id'],
+      attributes: ['id', 'name', 'email', 'avatar_id', 'created_at'],
       include: [
         {
           model: File,
