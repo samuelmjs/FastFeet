@@ -111,7 +111,7 @@ export default function Repicients() {
           <strong>Ações</strong>
         </section>
 
-        {Repicients.length === 0 && (
+        {recipients.length === 0 && (
           <EmptyContainer>
             <p>Não possui destinatários :(</p>
           </EmptyContainer>
