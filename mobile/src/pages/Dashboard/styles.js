@@ -75,3 +75,9 @@ export const Deliveries = styled.FlatList.attrs({
 })``;
 
 export const LogoutButton = styled.TouchableOpacity``;
+
+export const Empty = styled.Text`
+  color: ${(props) => (props.loading ? '#fff' : '#444')};
+  font-size: 20px;
+  text-align: center;
+`;

@@ -37,7 +37,9 @@ export const DeliveryText = styled.Text`
   margin-bottom: 5px;
 `;
 
-export const DeliveryDescription = styled.Text`
+export const DeliveryDescription = styled.Text.attrs({
+  numberOfLines: 2,
+})`
   font-size: 14px;
   color: #444;
   margin-bottom: 15px;

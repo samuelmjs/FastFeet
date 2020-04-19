@@ -4,7 +4,11 @@ import { Container, Text } from './styles';
 
 export default function Filter({ active, children, ...rest }) {
   return (
-    <Container {...rest} active={active}>
+    <Container
+      {...rest}
+      active={active}
+      hitSlop={{ left: 10, right: 10, top: 10, bottom: 10 }}
+    >
       <Text active={active}>{children}</Text>
     </Container>
   );

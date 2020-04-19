@@ -43,6 +43,7 @@ function Delivery({ delivery, navigation }) {
 
         <DeliveryDetailButton
           onPress={() => navigation.navigate('DeliveryDetail', { delivery })}
+          hitSlop={{ left: 10, right: 10, top: 20, bottom: 20 }}
         >
           <DeliveryDetailButtonText>Ver detalhes</DeliveryDetailButtonText>
         </DeliveryDetailButton>
