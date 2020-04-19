@@ -76,7 +76,7 @@ Obs: Foi utiliado <strong>MailTrap</strong> (visualizados de e-mail), <strong>se
 - Rode `yarn` para instalar as dependências
 
 - Rode `yarn start` para iniciar o client web
-<b/>
+<br/>
 
 ### Mobile (EXPO)
 
