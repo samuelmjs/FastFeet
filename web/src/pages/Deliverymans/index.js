@@ -9,6 +9,7 @@ import Button from '~/components/Button';
 import DeliverymanItem from './DeliverymanItem';
 
 import { Table, PageActions } from './styles';
+import { EmptyContainer } from '../Deliveries/styles';
 
 export default function Deliverymans() {
   const [deliverymen, setDeliverymen] = useState([]);
@@ -104,6 +105,12 @@ export default function Deliverymans() {
           <strong>Ações</strong>
         </section>
 
+        {deliverymen.length === 0 && (
+          <EmptyContainer>
+            <p>Não possui entregadores :(</p>
+          </EmptyContainer>
+        )}
+
         {deliverymen.map((deliveryman) => (
           <DeliverymanItem
             deliveryman={deliveryman}
@@ -125,7 +132,7 @@ export default function Deliverymans() {
 
         <button
           type="button"
-          disabled={total <= 4}
+          disabled={total <= 4 || deliverymen.length === 0}
           onClick={() => handlePage('next')}
         >
           Próximo

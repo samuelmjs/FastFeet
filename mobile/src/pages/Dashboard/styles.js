@@ -5,6 +5,7 @@ import Filter from '~/components/Filter';
 
 export const Container = styled.View`
   flex: 1;
+  background: #fff;
 `;
 
 export const Profile = styled.View`

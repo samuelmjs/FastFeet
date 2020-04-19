@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withNavigation } from 'react-navigation';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import DeliveryProgress from './Progress';
@@ -16,12 +17,12 @@ import {
   DeliveryDetailButtonText,
 } from './styles';
 
-export default function Delivery({ delivery, index }) {
+function Delivery({ delivery, navigation }) {
   return (
     <Container>
       <DeliveryHeader>
         <MaterialIcons size={25} name="local-shipping" color="#7d40e7" />
-        <DeliveryTitle>Encomenda {index + 1}</DeliveryTitle>
+        <DeliveryTitle>Encomenda {delivery.id}</DeliveryTitle>
       </DeliveryHeader>
 
       <DeliveryProgress
@@ -40,7 +41,9 @@ export default function Delivery({ delivery, index }) {
           <DeliveryDescription>{delivery.recipient.city}</DeliveryDescription>
         </DeliveryDetail>
 
-        <DeliveryDetailButton>
+        <DeliveryDetailButton
+          onPress={() => navigation.navigate('DeliveryDetail', { delivery })}
+        >
           <DeliveryDetailButtonText>Ver detalhes</DeliveryDetailButtonText>
         </DeliveryDetailButton>
       </DeliveryDetailContainer>
@@ -50,6 +53,7 @@ export default function Delivery({ delivery, index }) {
 
 Delivery.propTypes = {
   delivery: PropTypes.shape({
+    id: PropTypes.number,
     dateFormatted: PropTypes.string,
     start_date: PropTypes.string,
     end_date: PropTypes.string,
@@ -57,5 +61,9 @@ Delivery.propTypes = {
       city: PropTypes.string,
     }),
   }).isRequired,
-  index: PropTypes.number.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+  }).isRequired,
 };
+
+export default withNavigation(Delivery);

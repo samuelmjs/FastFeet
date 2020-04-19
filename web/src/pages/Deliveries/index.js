@@ -10,7 +10,7 @@ import { formatStatus, formatDate } from '~/utils/format';
 import Button from '~/components/Button';
 import DeliveryItem from './DeliveryItem';
 
-import { Table, PageActions } from './styles';
+import { Table, PageActions, EmptyContainer } from './styles';
 
 export default function Deliveries() {
   const [deliveries, setDeliveries] = useState([]);
@@ -113,6 +113,12 @@ export default function Deliveries() {
           <strong>Ações</strong>
         </section>
 
+        {deliveries.length === 0 && (
+          <EmptyContainer>
+            <p>Não possui encomendas :(</p>
+          </EmptyContainer>
+        )}
+
         {deliveries.map((delivery) => (
           <DeliveryItem
             key={delivery.id}
@@ -135,7 +141,7 @@ export default function Deliveries() {
 
         <button
           type="button"
-          disabled={total <= 4}
+          disabled={total <= 4 || deliveries.length === 0}
           onClick={() => handlePage('next')}
         >
           Próximo
