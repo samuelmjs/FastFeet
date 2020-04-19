@@ -64,8 +64,7 @@
 
 acesso o arquivo INSOMINIA no projeto e veja as rotas da api
 
-Obs: Foi utiliado <strong>MailTrap</strong> (visualizados de e-mail), <strong>sentry</strong> (tratamento de exceções).
-<strong>mantenha o backend rodando para executar o web e mobile</strong>
+
 <b/>
 
 ### Web
