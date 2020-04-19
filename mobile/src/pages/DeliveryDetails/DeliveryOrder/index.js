@@ -37,6 +37,7 @@ export default function DeliveryOrder({ navigation }) {
 
   async function handleSubmit() {
     try {
+      // eslint-disable-next-line no-undef
       const data = new FormData();
 
       data.append('file', {

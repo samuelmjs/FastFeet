@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { Alert } from 'react-native';
 import { parseISO, format } from 'date-fns';
 
 import api from '~/services/api';
 
 import Background from '~/components/Background';
+import Placeholder from './Placeholder';
 
 import {
   Container,
@@ -13,6 +15,7 @@ import {
   ProblemContainer,
   ProblemDescription,
   ProblemDate,
+  Empty,
 } from './styles';
 
 export default function ViewProblems({ navigation }) {
@@ -21,6 +24,7 @@ export default function ViewProblems({ navigation }) {
   ]);
 
   const [problems, setProblems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   async function getProblems() {
     try {
@@ -38,7 +42,11 @@ export default function ViewProblems({ navigation }) {
   }
 
   useEffect(() => {
-    getProblems();
+    setLoading(true);
+
+    getProblems().then(() => {
+      setLoading(false);
+    });
   }, []);
 
   return (
@@ -46,20 +54,31 @@ export default function ViewProblems({ navigation }) {
       <Container>
         <DeliveryTitle>Encomenda {deliveryId}</DeliveryTitle>
 
-        <Problems
-          data={problems}
-          keyExtractor={(problem) => String(problem.id)}
-          renderItem={({ item }) => (
-            <ProblemContainer>
-              <ProblemDescription>{item.description}</ProblemDescription>
-              <ProblemDate>{item.dateFormatted}</ProblemDate>
-            </ProblemContainer>
-          )}
-        />
+        {loading ? (
+          <Placeholder />
+        ) : (
+          <Problems
+            data={problems}
+            keyExtractor={(problem) => String(problem.id)}
+            ListEmptyComponent={<Empty>Não possui problemas :(</Empty>}
+            renderItem={({ item }) => (
+              <ProblemContainer>
+                <ProblemDescription>{item.description}</ProblemDescription>
+                <ProblemDate>{item.dateFormatted}</ProblemDate>
+              </ProblemContainer>
+            )}
+          />
+        )}
       </Container>
     </Background>
   );
 }
+
+ViewProblems.propTypes = {
+  navigation: PropTypes.shape({
+    getParam: PropTypes.func,
+  }).isRequired,
+};
 
 ViewProblems.navigationOptions = {
   headerTitle: 'Visualizar problemas',

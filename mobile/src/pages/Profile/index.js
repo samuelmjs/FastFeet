@@ -4,6 +4,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { signOut } from '~/store/modules/auth/actions';
 
+import { formatUri } from '~/utils/format';
+
 import {
   Container,
   ProfileAvatar,
@@ -28,6 +30,11 @@ export default function Profile() {
     };
   }, [profile.name]);
 
+  const avatarUri = useMemo(
+    () => profile.avatar && formatUri(profile.avatar),
+    []
+  );
+
   function handleLogout() {
     dispatch(signOut());
   }
@@ -37,8 +44,8 @@ export default function Profile() {
       <ProfileAvatar
         source={{
           uri: profile.avatar
-            ? profile.avatar.url
-            : `https://ui-avatars.com/api/?name=${avatarName.first}+${avatarName.second}&bold=true`,
+            ? avatarUri
+            : `https://ui-avatars.com/api/?name=${avatarName.first}+${avatarName.second}&bold=true&size=224`,
         }}
       />
 
@@ -66,6 +73,7 @@ export default function Profile() {
 
 Profile.navigationOptions = {
   tabBarLabel: 'Meu Perfil',
+  // eslint-disable-next-line react/prop-types
   tabBarIcon: ({ tintColor }) => (
     <MaterialIcons name="account-circle" size={24} color={tintColor} />
   ),

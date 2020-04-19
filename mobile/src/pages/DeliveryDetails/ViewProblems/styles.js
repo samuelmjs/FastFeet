@@ -45,3 +45,9 @@ export const ProblemDate = styled.Text`
   font-size: 12px;
   color: #c1c1c1;
 `;
+
+export const Empty = styled.Text`
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+`;

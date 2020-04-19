@@ -20,6 +20,9 @@ import {
 function Actions({ navigation, deliveryId, date }) {
   const deliverymanId = useSelector((state) => state.auth.id);
 
+  const enableStartDate = !!date.start;
+  const enableEndDate = !!(!date.start || date.end);
+
   async function handleCheck() {
     try {
       await api.put(
@@ -59,7 +62,7 @@ function Actions({ navigation, deliveryId, date }) {
   return (
     <>
       <ContainerSmall>
-        <ConfirmWithdrawal disabled={date.start} onPress={handleCheck}>
+        <ConfirmWithdrawal disabled={enableStartDate} onPress={handleCheck}>
           <MaterialIcons name="autorenew" color="#82BF18" size={28} />
           <TextLarge>Confirmar Retirada</TextLarge>
         </ConfirmWithdrawal>
@@ -79,10 +82,7 @@ function Actions({ navigation, deliveryId, date }) {
 
         <Line />
 
-        <DeliveryAction
-          disabled={!date.start || date.end}
-          onPress={handleDeliveryOrder}
-        >
+        <DeliveryAction disabled={enableEndDate} onPress={handleDeliveryOrder}>
           <MaterialCommunityIcons
             color="#7D40E7"
             name="check-circle-outline"

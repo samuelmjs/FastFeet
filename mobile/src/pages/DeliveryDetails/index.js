@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { StatusBar } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -83,6 +84,12 @@ export default function DeliveryDetails({ navigation }) {
     </Background>
   );
 }
+
+DeliveryDetails.propTypes = {
+  navigation: PropTypes.shape({
+    getParam: PropTypes.func,
+  }).isRequired,
+};
 
 DeliveryDetails.navigationOptions = {
   headerTitle: 'Detalhes da encomenda',

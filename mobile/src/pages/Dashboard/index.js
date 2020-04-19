@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import PropTypes from 'prop-types';
-import { withNavigationFocus } from 'react-navigation';
 import { StatusBar, Alert } from 'react-native';
+import { withNavigationFocus } from 'react-navigation';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import { parseISO, format } from 'date-fns';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import Delivery from '~/components/Delivery';
+import Placeholder from './Placeholder';
 import { signOut } from '~/store/modules/auth/actions';
 
-import { formatAdrress, formatStatus } from '~/utils/format';
+import { formatAdrress, formatStatus, formatUri } from '~/utils/format';
 
 import api from '~/services/api';
 
@@ -27,11 +28,13 @@ import {
   DeliveriesFilterContainer,
   DeliveriesFilter,
   Deliveries,
+  Empty,
 } from './styles';
 
 function Dashboard({ isFocused }) {
   const [deliveries, setDeliveries] = useState([]);
   const [filterActive, setFilterActive] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -47,6 +50,11 @@ function Dashboard({ isFocused }) {
     };
   }, [profile.name]);
 
+  const avatarUri = useMemo(
+    () => profile.avatar && formatUri(profile.avatar),
+    []
+  );
+
   async function getDeliveries() {
     try {
       const response = await api.get(
@@ -58,20 +66,20 @@ function Dashboard({ isFocused }) {
         }
       );
 
-      setDeliveries(
-        response.data.map((delivery) => ({
-          ...delivery,
-          dateFormatted: format(parseISO(delivery.createdAt), 'dd/MM/yyyy'),
-          startDateFormatted:
-            delivery.start_date &&
-            format(parseISO(delivery.start_date), 'dd/MM/yyyy'),
-          endDateFormatted:
-            delivery.end_date &&
-            format(parseISO(delivery.end_date), 'dd/MM/yyyy'),
-          addressFormatted: formatAdrress(delivery.recipient),
-          status: formatStatus(delivery),
-        }))
-      );
+      const data = response.data.map((delivery) => ({
+        ...delivery,
+        dateFormatted: format(parseISO(delivery.createdAt), 'dd/MM/yyyy'),
+        startDateFormatted:
+          delivery.start_date &&
+          format(parseISO(delivery.start_date), 'dd/MM/yyyy'),
+        endDateFormatted:
+          delivery.end_date &&
+          format(parseISO(delivery.end_date), 'dd/MM/yyyy'),
+        addressFormatted: formatAdrress(delivery.recipient),
+        status: formatStatus(delivery),
+      }));
+
+      setDeliveries(data);
     } catch (error) {
       Alert.alert(
         'Erro',
@@ -89,7 +97,10 @@ function Dashboard({ isFocused }) {
   }
 
   useEffect(() => {
-    getDeliveries();
+    setLoading(true);
+    getDeliveries().then(() => {
+      setLoading(false);
+    });
   }, [filterActive, isFocused]);
 
   return (
@@ -101,8 +112,8 @@ function Dashboard({ isFocused }) {
             <ProfileAvatar
               source={{
                 uri: profile.avatar
-                  ? profile.avatar.url
-                  : `https://ui-avatars.com/api/?name=${avatarName.first}+${avatarName.second}&bold=true`,
+                  ? avatarUri
+                  : `https://ui-avatars.com/api/?name=${avatarName.first}+${avatarName.second}&bold=true&size=224`,
               }}
             />
             <ProfileInfo>
@@ -134,11 +145,23 @@ function Dashboard({ isFocused }) {
           </DeliveriesFilterContainer>
         </DeliveriesHeader>
 
-        <Deliveries
-          data={deliveries}
-          keyExtractor={(delivery) => String(delivery.id)}
-          renderItem={({ item }) => <Delivery key={item.id} delivery={item} />}
-        />
+        {loading ? (
+          <Placeholder />
+        ) : (
+          <Deliveries
+            data={deliveries}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(delivery) => String(delivery.id)}
+            onEndReachedThreshold={0.1}
+            onEndReached={() => getDeliveries()}
+            ListEmptyComponent={
+              <Empty loading={loading}>Não Possui entregas :(</Empty>
+            }
+            renderItem={({ item }) => (
+              <Delivery key={item.id} delivery={item} />
+            )}
+          />
+        )}
       </Container>
     </>
   );
