@@ -7,7 +7,7 @@ import Recipient from '../models/Recipient';
 
 class DeliveryStatusController {
   async index(req, res) {
-    const { delivered, page = 1 } = req.query;
+    const { delivered } = req.query;
 
     const deliverymanExists = await User.findByPk(req.params.id, {
       attributes: ['provider']
@@ -23,8 +23,6 @@ class DeliveryStatusController {
 
     const deliveries = await Delivery.findAll({
       order: ['id'],
-      limit: 5,
-      offset: (page - 1) * 5,
       where: {
         deliveryman_id: req.params.id,
         canceled_at: null,
@@ -34,8 +32,10 @@ class DeliveryStatusController {
         'id',
         'product',
         'start_date',
+        'end_date',
         'recipient_id',
-        'signature_id'
+        'signature_id',
+        'createdAt'
       ],
       include: [
         {
@@ -113,7 +113,7 @@ class DeliveryStatusController {
         .json({ error: 'Delivery has not yet been withdrawn' });
     }
 
-    await delivery.update({ end_date: new Date(), signature_id });
+    await delivery.update({ end_date: req.body.endDate, signature_id });
 
     return res.json(delivery);
   }
@@ -126,6 +126,8 @@ class DeliveryStatusController {
     });
 
     const schedule = ['08:00', '20:00'];
+
+    const { startDate } = req.body;
 
     const avaiable = schedule.map(time => {
       const [hour, minute] = time.split(':');
@@ -141,10 +143,8 @@ class DeliveryStatusController {
     });
 
     if (
-      !(
-        isAfter(new Date(), avaiable[0].value) &&
-        isBefore(new Date(), avaiable[1].value)
-      )
+      isAfter(startDate, avaiable[0].value) ||
+      isBefore(startDate, avaiable[1].value)
     ) {
       return res.status(400).json({
         error: `Delivery pickups can only be made from ${avaiable[0].time} to ${avaiable[1].time}`

@@ -102,9 +102,7 @@ class RecipientController {
       complement: Yup.string(),
       state: Yup.string().required(),
       city: Yup.string().required(),
-      cep: Yup.string()
-        .test('cep', 'Must be exactly 8 characters', cep => cep.length === 8)
-        .required()
+      cep: Yup.string().required()
     });
 
     if (!(await schema.isValid(req.body))) {

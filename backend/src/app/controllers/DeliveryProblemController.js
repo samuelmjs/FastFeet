@@ -33,7 +33,10 @@ class DeliveryProblemController {
       return res.status(400).json({ error: 'Delivery does not exists' });
     }
 
-    const deliveryProblems = await DeliveryProblem.findOne({ delivery_id: id });
+    const deliveryProblems = await DeliveryProblem.findAll({
+      where: { delivery_id: id },
+      attributes: ['id', 'description', 'createdAt']
+    });
 
     return res.json(deliveryProblems);
   }
