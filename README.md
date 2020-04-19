@@ -64,10 +64,13 @@
 
 acesso o arquivo INSOMINIA no projeto e veja as rotas da api
 
-
+Obs: Foi utiliado <strong>MailTrap</strong> (visualizados de e-mail), <strong>sentry</strong> (tratamento de exceções).
+<strong>mantenha o backend rodando para executar o web e mobile</strong>
 <b/>
 
+
 ### Web
+
 - A partir da raiz do projeto, entre na pasta web rodando `cd web`
 
 - Rode `yarn` para instalar as dependências
@@ -76,6 +79,7 @@ acesso o arquivo INSOMINIA no projeto e veja as rotas da api
 <b/>
 
 ### Mobile (EXPO)
+
   Obs: Está aplicação foi testada somente em IOS
   
 - Baixe o app Expo na loja do seu celular
