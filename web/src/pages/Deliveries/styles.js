@@ -19,6 +19,23 @@ export const Table = styled.div`
   }
 `;
 
+export const EmptyContainer = styled.div`
+  width: 100%;
+  padding: 20px;
+  background: #fff;
+  border-radius: 4px;
+  margin: 30px 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    font-size: 20px;
+    color: #444;
+  }
+`;
+
 export const PageActions = styled.div`
   padding-top: 10px;
   display: flex;

@@ -6,6 +6,7 @@ import api from '~/services/api';
 import ProblemItem from './ProblemItem';
 
 import { Table, PageActions } from './styles';
+import { EmptyContainer } from '../Deliveries/styles';
 
 export default function Problem() {
   const [problems, setProblems] = useState([]);
@@ -78,6 +79,12 @@ export default function Problem() {
           <strong>Ações</strong>
         </section>
 
+        {problems.length === 0 && (
+          <EmptyContainer>
+            <p>Não possui problemas :(</p>
+          </EmptyContainer>
+        )}
+
         {problems.map((problem) => (
           <ProblemItem
             key={problem.id}
@@ -100,7 +107,7 @@ export default function Problem() {
 
         <button
           type="button"
-          disabled={total <= 4}
+          disabled={total <= 4 || problems.length === 0}
           onClick={() => handlePage('next')}
         >
           Próximo

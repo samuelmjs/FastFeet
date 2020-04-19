@@ -11,6 +11,7 @@ import Button from '~/components/Button';
 import RecipientItem from './RecipientItem';
 
 import { Table, PageActions } from './styles';
+import { EmptyContainer } from '../Deliveries/styles';
 
 export default function Repicients() {
   const [recipients, setRecipients] = useState([]);
@@ -110,6 +111,12 @@ export default function Repicients() {
           <strong>Ações</strong>
         </section>
 
+        {Repicients.length === 0 && (
+          <EmptyContainer>
+            <p>Não possui destinatários :(</p>
+          </EmptyContainer>
+        )}
+
         {recipients.map((recipient) => (
           <RecipientItem
             key={recipient.id}
@@ -132,7 +139,7 @@ export default function Repicients() {
 
         <button
           type="button"
-          disabled={total < 4}
+          disabled={total < 4 || Repicients.length === 0}
           onClick={() => handlePage('next')}
         >
           Próximo
