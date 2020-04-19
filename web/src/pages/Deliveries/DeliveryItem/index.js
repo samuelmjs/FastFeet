@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { MdModeEdit, MdDeleteForever } from 'react-icons/md';
+import { MdModeEdit, MdDeleteForever, MdImage } from 'react-icons/md';
 
 import history from '~/services/history';
 
@@ -73,11 +73,14 @@ export default function DeliveryItem({ delivery, onDelete }) {
                     <small>{delivery.end_dateFormatted}</small>
                   </div>
                 </div>
-                {delivery.signature && (
-                  <div id="signature">
+
+                <div id="signature">
+                  {delivery.signature ? (
                     <img src={delivery.signature.url} alt="Signature" />
-                  </div>
-                )}
+                  ) : (
+                    <MdImage size={36} color="#999" />
+                  )}
+                </div>
               </ModalContent>
             </Modal>
           </Action>

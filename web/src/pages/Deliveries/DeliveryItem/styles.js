@@ -63,8 +63,21 @@ export const ModalContent = styled.div`
   }
 
   #signature {
-    padding-top: 15px;
+    display: flex;
     align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    height: 100px;
+    width: 100% !important;
+    border: 1px dashed #eee;
+    border-radius: 8px;
+
+    img {
+      border-radius: 0 !important;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
   > div + div {
